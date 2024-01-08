@@ -13,7 +13,8 @@ public class Account {
     public Account() {
     }
 
-    public Account(String person, BigDecimal balance) {
+    public Account(Long id, String person, BigDecimal balance) {
+        this.id = id;
         this.person = person;
         this.balance = balance;
     }
@@ -42,7 +43,7 @@ public class Account {
         this.balance = balance;
     }
 
-    public void Debit(BigDecimal amount) {
+    public void debit(BigDecimal amount) {
         BigDecimal newBalance = this.balance.subtract(amount);
         if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
             throw new InsufficientMoneyException("Dinero insuficiente en la cuenta");
@@ -50,7 +51,7 @@ public class Account {
         this.balance = newBalance;
     }
 
-    public void Credit(BigDecimal amount) {
+    public void credit(BigDecimal amount) {
     this.balance = this.balance.add(amount);
     }
 
