@@ -1,5 +1,7 @@
 package org.joel.test.springboot.app.sprigboot_test;
 
+import org.joel.test.springboot.app.sprigboot_test.models.Account;
+import org.joel.test.springboot.app.sprigboot_test.models.Bank;
 import org.joel.test.springboot.app.sprigboot_test.repositories.AccountRepository;
 import org.joel.test.springboot.app.sprigboot_test.repositories.BankRepository;
 import org.joel.test.springboot.app.sprigboot_test.services.AccountService;
@@ -47,6 +49,18 @@ class SprigbootTestApplicationTests {
 
 		assertEquals("900", originBalance.toPlainString());
 		assertEquals("2100", destinationBalance.toPlainString());
+
+		int total = service.reviewAllTransactions(1L);
+
+		assertEquals(1, total);
+
+		verify(accountRepository, times(3)).findById(1L);
+		verify(accountRepository, times(3)).findById(2L);
+		verify(accountRepository, times(2)).update(any(Account.class));
+
+		verify(bankRepository, times(2)).findById(1L);
+		verify(bankRepository).update(any(Bank.class));
+
 	}
 
 

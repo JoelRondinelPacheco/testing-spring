@@ -42,7 +42,7 @@ public class AccountServiceImpl implements AccountService{
 
         Account accountOrigin = this.accountRepository.findById(originAccount);
         accountOrigin.debit(amount);
-        ;
+        this.accountRepository.update(accountOrigin);
 
         Account accountDestination = this.accountRepository.findById(destinationAccount);
         accountDestination.credit(amount);
