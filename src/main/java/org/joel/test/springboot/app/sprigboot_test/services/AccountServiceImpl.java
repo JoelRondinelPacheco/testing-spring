@@ -5,6 +5,7 @@ import org.joel.test.springboot.app.sprigboot_test.models.Bank;
 import org.joel.test.springboot.app.sprigboot_test.repositories.AccountRepository;
 import org.joel.test.springboot.app.sprigboot_test.repositories.BankRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -19,23 +20,27 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Account findById(Long id) {
         return this.accountRepository.findById(id).orElseThrow();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int reviewAllTransactions(Long bankId) {
         Bank bank = this.bankRepository.findById(bankId).orElseThrow();
         return bank.getAllTransactions();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BigDecimal reviewBalance(Long accountId) {
         Account account = this.accountRepository.findById(accountId).orElseThrow();
         return account.getBalance();
     }
 
     @Override
+    @Transactional
     public void transaction(Long originAccount, Long destinationAccount, BigDecimal amount, Long bankId) {
 
         Account accountOrigin = this.accountRepository.findById(originAccount).orElseThrow();
