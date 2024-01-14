@@ -1,12 +1,18 @@
 package org.joel.test.springboot.app.sprigboot_test.models;
 
+import jakarta.persistence.*;
 import org.joel.test.springboot.app.sprigboot_test.exceptions.InsufficientMoneyException;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
+@Table(name ="accounts")
 public class Account {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String person;
     private BigDecimal balance;
 

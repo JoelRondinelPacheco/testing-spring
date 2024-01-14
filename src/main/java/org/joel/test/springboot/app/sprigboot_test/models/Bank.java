@@ -1,8 +1,16 @@
 package org.joel.test.springboot.app.sprigboot_test.models;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "banks")
 public class Bank {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Column(name = "all_transactions")
     private int allTransactions;
 
     public Bank() {
