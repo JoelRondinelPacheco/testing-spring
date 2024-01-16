@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService{
@@ -21,8 +23,26 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     @Transactional(readOnly = true)
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public Account save(Account account) {
+        return accountRepository.save(account);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Account findById(Long id) {
         return this.accountRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        accountRepository.deleteById(id);
     }
 
     @Override
@@ -42,19 +62,23 @@ public class AccountServiceImpl implements AccountService{
     @Override
     @Transactional
     public void transaction(Long originAccount, Long destinationAccount, BigDecimal amount, Long bankId) {
+    Account accountOrigin = this.accountRepository.findById(originAccount).orElseThrow();
+    accountOrigin.debit(amount);
+    this.accountRepository.save(accountOrigin);
 
-        Account accountOrigin = this.accountRepository.findById(originAccount).orElseThrow();
-        accountOrigin.debit(amount);
-        this.accountRepository.save(accountOrigin);
+    Account accountDestination = this.accountRepository.findById(destinationAccount).orElseThrow();
+    accountDestination.credit(amount);
+    this.accountRepository.save(accountDestination);
+    List<Bank> banks = this.bankRepository.findAll();
+    if (!banks.isEmpty()) {
+        System.out.println("Empty");
+        System.out.println(banks.size());
+    }
+    Bank bank = this.bankRepository.findById(bankId).orElseThrow();
+    int totalTransactions = bank.getAllTransactions();
+    bank.setAllTransactions(++totalTransactions);
+    this.bankRepository.save(bank);
 
-        Account accountDestination = this.accountRepository.findById(destinationAccount).orElseThrow();
-        accountDestination.credit(amount);
-        this.accountRepository.save(accountDestination);
-
-        Bank bank = this.bankRepository.findById(bankId).orElseThrow();
-        int totalTransactions = bank.getAllTransactions();
-        bank.setAllTransactions(++totalTransactions);
-        this.bankRepository.save(bank);
 
 
     }
